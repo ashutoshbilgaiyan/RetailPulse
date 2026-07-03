@@ -1,0 +1,6 @@
+segment,customer_count,avg_recency,avg_frequency,avg_monetary,total_revenue,churn_rate,revenue_share
+New Customers,2875,45.7,3.24,1192.36,3428028.55,0.32,39.1
+Loyal,367,18.61,15.05,7153.18,2625218.48,0.04,30.0
+Champions,26,9.38,64.69,40454.04,1051805.01,0.12,12.0
+VIP,5,6.8,112.0,210240.71,1051203.54,0.0,12.0
+At Risk,1018,241.94,1.64,590.06,600684.44,0.64,6.9

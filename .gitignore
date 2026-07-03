@@ -1,21 +1,44 @@
-# data files — too large for git
-data/raw/
-data/processed/
-*.xlsx
-*.csv
+# data files — ignore raw / heavy files
 
-# model files — too large
-models/*.pkl
-models/*.joblib
+data/raw/
+*.xlsx
+
+# ignore heavy processed files that app does NOT need
+
+data/processed/retail_clean.csv
+data/processed/customer_stats.csv
+data/processed/rfm_features.csv
+data/processed/X_churn.csv
+data/processed/y_churn.csv
+
+# keep the Streamlit app data files
+
+!data/processed/rfm_segments.csv
+!data/processed/churn_scores.csv
+!data/processed/demand_forecast.csv
+!data/processed/inventory_recommendations.csv
+!data/processed/segment_report.csv
+
+# models — ignore everything by default except app models
+
+models/*
+!models/xgboost_churn.pkl
+!models/shap_explainer.pkl
 
 # python
-__pycache__/
+
+**pycache**/
 *.pyc
 .ipynb_checkpoints/
 .env
 
-# never commit these!
+# local environments
+
+venv311/
+.venv/
+venv/
+
+# never commit these
+
 *.key
-secrets.pyvenv311/ 
-venv311/ 
-venv311/ 
+secrets.py
