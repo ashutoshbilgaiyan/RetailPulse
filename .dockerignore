@@ -1,0 +1,11 @@
+data/raw/
+notebooks/
+venv311/
+*.xlsx
+*.ipynb
+__pycache__/
+*.pyc
+.git/
+*.log
+.env
+.ipynb_checkpoints/

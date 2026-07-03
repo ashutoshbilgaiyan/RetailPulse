@@ -1,0 +1,101 @@
+name: RetailPulse CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install core dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas numpy scikit-learn xgboost streamlit plotly
+
+      - name: Validate cleaned data
+        run: |
+          python -c "
+import pandas as pd, os
+path = 'data/processed/retail_clean.csv'
+if os.path.exists(path):
+    df = pd.read_csv(path)
+    assert df.shape[0] > 100000, 'Too few rows in retail_clean.csv'
+    assert df.isnull().sum().sum() == 0, 'Missing values found in retail_clean.csv'
+    assert 'TotalPrice' in df.columns, 'Missing TotalPrice column'
+    print(f'Data validated: {df.shape}')
+else:
+    print('Warning: retail_clean.csv not found in repo')
+          "
+
+      - name: Validate churn features
+        run: |
+          python -c "
+import pandas as pd, os
+x_path = 'data/processed/X_churn.csv'
+y_path = 'data/processed/y_churn.csv'
+if os.path.exists(x_path) and os.path.exists(y_path):
+    X = pd.read_csv(x_path)
+    y = pd.read_csv(y_path).squeeze()
+    assert X.shape[1] == 13, f'Expected 13 features, got {X.shape[1]}'
+    assert len(X) == len(y), 'X and y length mismatch'
+    assert y.nunique() == 2, 'y should have 2 classes'
+    assert X.isnull().sum().sum() == 0, 'Missing values in X'
+    print(f'Churn features validated: {X.shape}')
+    print(f'Churn rate: {y.mean():.1%}')
+else:
+    print('Warning: X_churn.csv or y_churn.csv not found in repo')
+          "
+
+      - name: Validate churn scores
+        run: |
+          python -c "
+import pandas as pd, os
+path = 'data/processed/churn_scores.csv'
+if os.path.exists(path):
+    churn = pd.read_csv(path)
+    assert 'churn_risk' in churn.columns, 'Missing churn_risk column'
+    assert churn['churn_risk'].between(0,1).all(), 'Invalid churn scores'
+    assert 'segment' in churn.columns, 'Missing segment column'
+    print(f'Churn scores validated: {churn.shape}')
+else:
+    print('Warning: churn_scores.csv not found in repo')
+          "
+
+      - name: Validate segments
+        run: |
+          python -c "
+import pandas as pd, os
+path = 'data/processed/segment_report.csv'
+if os.path.exists(path):
+    seg = pd.read_csv(path)
+    assert len(seg) == 5, f'Expected 5 segments, got {len(seg)}'
+    assert 'revenue_share' in seg.columns, 'Missing revenue_share column'
+    print(f'Segments validated: {seg[\"segment\"].tolist()}')
+else:
+    print('Warning: segment_report.csv not found in repo')
+          "
+
+      - name: Check dashboard syntax
+        run: |
+          python -m py_compile dashboard/app.py
+          echo "Dashboard syntax check passed"
+
+      - name: Check Dockerfile exists
+        run: |
+          if [ -f Dockerfile ]; then
+            echo "Dockerfile exists"
+          else
+            echo "Warning: Dockerfile missing"
+          fi
