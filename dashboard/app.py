@@ -1,4 +1,4 @@
-```python
+
 import streamlit as st
 import pandas as pd
 import warnings
@@ -374,4 +374,4 @@ elif page == "📦 Inventory":
         "inventory_plan.csv",
         "text/csv"
     )
-```
+
