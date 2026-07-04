@@ -59,12 +59,12 @@ page = st.sidebar.radio(
 
 st.sidebar.markdown("---")
 st.sidebar.markdown("**RetailPulse v1.0**")
-st.sidebar.markdown("Zidio Development · 2026")
+st.sidebar.caption("Built by Ashutosh Bilgaiyan")
 st.sidebar.markdown("---")
 
 # optional export
 st.sidebar.subheader("📥 Export Reports")
-if st.sidebar.button("Export Full Report"):
+if st.sidebar.download_button("📥 Download Summary Report",):
     full_report = pd.merge(
         churn[["Customer ID", "segment", "churn_risk", "recency", "frequency", "monetary"]],
         inventory[["date", "forecast", "reorder_qty", "alert"]].rename(columns={"date": "report_date"}),
@@ -123,7 +123,7 @@ if page == "🏠 Overview":
 # ── DEMAND FORECASTING ─────────────────────────────
 elif page == "📈 Demand Forecasting":
     st.title("📈 Demand Forecasting")
-    st.markdown("30-day ahead predictions using Facebook Prophet")
+    st.markdown("30-day demand and revenue forecast using Prophet")
     st.markdown("---")
 
     st.subheader("What-If Analysis")
@@ -194,7 +194,7 @@ elif page == "📈 Demand Forecasting":
 # ── CHURN PREDICTION ───────────────────────────────
 elif page == "⚠️ Churn Prediction":
     st.title("⚠️ Churn Prediction")
-    st.markdown("XGBoost model with churn-risk scoring")
+    st.caption("Customer churn-risk analysis powered by XGBoost")
     st.markdown("---")
 
     col1, col2 = st.columns(2)
@@ -271,7 +271,7 @@ elif page == "⚠️ Churn Prediction":
 # ── CUSTOMER SEGMENTS ──────────────────────────────
 elif page == "👥 Customer Segments":
     st.title("👥 Customer Segmentation")
-    st.markdown("K-Means RFM clustering — 5 customer segments")
+    st.caption("Customer segmentation using RFM analysis and K-Means clustering")
     st.markdown("---")
 
     selected_seg = st.selectbox(
@@ -320,7 +320,7 @@ elif page == "👥 Customer Segments":
 # ── INVENTORY ──────────────────────────────────────
 elif page == "📦 Inventory":
     st.title("📦 Inventory Optimization")
-    st.markdown("Reorder recommendations based on demand forecast")
+    st.caption("Inventory recommendations and low-stock alerts based on forecasted demand")
     st.markdown("---")
 
     low_stock = inventory[inventory["alert"] == "🔴 LOW STOCK"]
