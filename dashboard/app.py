@@ -64,20 +64,21 @@ st.sidebar.markdown("---")
 
 # optional export
 st.sidebar.subheader("📥 Export Reports")
-if st.sidebar.download_button("📥 Download Summary Report",):
-    full_report = pd.merge(
-        churn[["Customer ID", "segment", "churn_risk", "recency", "frequency", "monetary"]],
-        inventory[["date", "forecast", "reorder_qty", "alert"]].rename(columns={"date": "report_date"}),
-        how="cross"
-    )
-    csv = full_report.head(1000).to_csv(index=False)
-    st.sidebar.download_button(
-        "📄 Download Full CSV",
-        csv,
-        "retailpulse_report.csv",
-        "text/csv"
-    )
-    st.sidebar.success("✓ Report ready!")
+
+full_report = pd.merge(
+    churn[["Customer ID", "segment", "churn_risk", "recency", "frequency", "monetary"]],
+    inventory[["date", "forecast", "reorder_qty", "alert"]].rename(columns={"date": "report_date"}),
+    how="cross"
+)
+
+csv = full_report.head(1000).to_csv(index=False)
+
+st.sidebar.download_button(
+    label="📥 Download Summary Report",
+    data=csv,
+    file_name="retailpulse_report.csv",
+    mime="text/csv"
+)
 
 # ── OVERVIEW ───────────────────────────────────────
 if page == "🏠 Overview":
